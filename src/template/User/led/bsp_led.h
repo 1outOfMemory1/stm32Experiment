@@ -6,6 +6,10 @@
 
 // LED0  对应接口 PB5   LED1 对应接口 PE5
 
+#define LED0 BIT_ADDR(GPIOB_ODR_Addr,5)
+#define LED1 BIT_ADDR(GPIOE_ODR_Addr,5)
+
+
 #define LED0_GPIO_PIN  GPIO_Pin_5
 #define LED0_GPIO_PORT  GPIOB
 #define LED0_GPIO_CLK  RCC_APB2Periph_GPIOB
