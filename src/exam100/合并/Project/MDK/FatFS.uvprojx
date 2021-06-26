@@ -428,6 +428,11 @@
               <FileType>1</FileType>
               <FilePath>..\..\Board\Source\BSP_TFTLCD.c</FilePath>
             </File>
+            <File>
+              <FileName>sys.c</FileName>
+              <FileType>1</FileType>
+              <FilePath>..\..\Board\Source\sys.c</FilePath>
+            </File>
           </Files>
         </Group>
         <Group>

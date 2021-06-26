@@ -12,9 +12,10 @@
 *	返 回 值: 无
 *********************************************************************************************************
 */
-void BSP_Led_Init(void)
+void BSP_Led_Key_Init(void)
 {
 	BSP_Led_GPIO_Init();
+	BSP_Key_GPIO_Init();
 }
 
 /*
@@ -27,16 +28,75 @@ void BSP_Led_Init(void)
 */
 static void BSP_Led_GPIO_Init(void)
 {
-	GPIO_InitTypeDef GPIO_InitStructure;
-	RCC_APB2PeriphClockCmd(RCC_LEDALL, ENABLE);				//使能GPIOF时钟 
-	
-	GPIO_InitStructure.GPIO_Pin = GPIO_PIN_LED1;			//Led引脚
-	GPIO_InitStructure.GPIO_Speed = GPIO_Speed_50MHz;
-	GPIO_InitStructure.GPIO_Mode = GPIO_Mode_Out_PP;	//推挽输出
-	GPIO_Init(GPIO_PORT_LED1, &GPIO_InitStructure);
-	
-	BSP_Led_Off(Led1);
+GPIO_InitTypeDef  GPIO_InitStruct;
+	RCC_APB2PeriphClockCmd(KEY0_GPIO_CLK|KEY1_GPIO_CLK, ENABLE);	 //使能PE,PA端口时钟
+	GPIO_InitStruct.GPIO_Pin = KEY0_GPIO_PIN|KEY1_GPIO_PIN;				 //KEY0 和 KEY1 
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_IPU; 		 //上拉输入
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
+	GPIO_Init(KEY0_GPIO_PORT, &GPIO_InitStruct);			 //根据设定参数初始化 KEY0 和 KEY1 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+static void BSP_Key_GPIO_Init(void){
+	GPIO_InitTypeDef  GPIO_InitStruct;
+	
+	RCC_APB2PeriphClockCmd(LED0_GPIO_CLK, ENABLE);	 //使能PB,PE端口时钟
+	GPIO_InitStruct.GPIO_Pin = LED0_GPIO_PIN;				 //LED0-->PB.5 端口配置
+	GPIO_InitStruct.GPIO_Mode = GPIO_Mode_Out_PP; 		 //推挽输出
+	GPIO_InitStruct.GPIO_Speed = GPIO_Speed_50MHz;		 //IO口速度为50MHz
+	GPIO_Init(LED0_GPIO_PORT, &GPIO_InitStruct);			 //根据设定参数初始化GPIOB.5
+		
+
+
+}
+
+
+
+u8 Key_Scan(u8 mode){
+	static u8 key_up=1;//按键按松开标志
+	if(mode)key_up=1;  //支持连按		  
+	if(key_up&&(KEY0==0||KEY1==0))
+	{
+	  DelayMs(10);//去抖动 
+		key_up=0;
+		if(KEY0==0)return 1;
+		else if(KEY1==0)return 2;
+	}else if(KEY0==1&&KEY1==1)key_up=1; 	    
+ 	return 0;// 无按键按下
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 /*
 *********************************************************************************************************

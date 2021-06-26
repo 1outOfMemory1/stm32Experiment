@@ -72,7 +72,7 @@
 #define cSetD6D5ClrD4		0x60
 #define cSetD6D5D4	 		0x70
 	
-void DelayMs(u32 nMs);
+
 //extern void Waitus(u16 time);
 //STATUS 
 void Chk_Busy(void);
