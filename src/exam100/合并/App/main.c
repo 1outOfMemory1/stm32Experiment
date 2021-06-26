@@ -12,7 +12,7 @@
 #include "malloc.h"
 #include "ff.h"  
 #include "exfuns.h"    
-
+#include "stdlib.h"
 
 #include "BSP_ParallelBus.h"
 #include "BSP_TFTLCD.h"
@@ -20,13 +20,72 @@
 #include "StartBMP.h"  //首次包含，以后可以不再包含！
 
 
-
+BYTE buffer[1600]; 
 
 /* 不精确延时函数 */
 void DelayCount(uint32_t Count)
 {
 	while(Count--);
 }
+
+
+void myitoa(char *str,int n)
+{
+	int i,j = 0;
+	while(n!=0)
+	{
+		*str = n%10 + '0';
+		n/=10;
+		j++;
+		str++;
+	}
+	*str = '\0';
+//	for(i=1;i<=j;i++)
+//	{
+//		//printf("%c",*(str-i));
+//	}
+	//printf("\n");
+}
+
+
+
+void myDrawAPixelLine(BYTE *buf,u16 width,u16 line_num){
+	
+	
+	u16 w,h;
+	for(w = 0; w< width*2; w+=2)
+	{
+		u16 x;
+		x = buf[w+1]<<8 | buf[w];
+		//printf("%x ",x);
+		RA8875_PutPixelGUI(w/2, line_num, x);
+	}
+}
+
+
+void myLoadPicFromSDcard(FIL fsrc,char * filename){
+	int j = 0;
+	FRESULT res;
+	res = f_open(&fsrc, filename, FA_OPEN_EXISTING | FA_READ); 
+	if (res)  
+	{ 
+			printf("cannot read %s \n",filename);	 
+	}else{
+		printf("read %s  success\n",filename);	 
+	}
+	
+	while(1){
+		res = f_read(&fsrc, buffer, sizeof(buffer), &br); 
+    if (res || br == 0) break;   // error or eof 
+		myDrawAPixelLine(buffer,800,j);
+		j++;
+	}
+	f_close(&fsrc);
+}
+
+
+
+
 
 /* 主函数 */
 int main(void)
@@ -36,47 +95,18 @@ int main(void)
 	
 	u16 x,y;
 	u32 total,free;
-	
-	
+	FIL fsrc;  
+	FRESULT res;
+
+	UINT br;  
+	int i = 0;
+	int j = 0;
 	BSP_Led_Init();				//LED灯GPIO初始化
 	BSP_PBus_Init();
 	BSP_TFTLCD_Init();
 	
-	LcdClear(WHITE);
-	RA8875_DrawHLine(0,240,800,BLACK);
-	RA8875_DrawVLine(400,0,480,BLACK);
-	LcdPrint16bitBmp((u16*)0x0800F000,0,0,400,240);
-	for(x=0;x<400;x++)
-		for(y=0;y<240;y++)
-		{
-			RA8875_PutPixelGUI(x,y+240,RA8875_GetPixelGUI(x,y));
-		}
-	LcdFillRec(450,60,550,180,0,BLACK);
-	RA8875_RTERect(650,60,750,180,BLACK);
-	LcdPrintStr("Clear",400,240,BLACK,WHITE,0);
-	LcdPrintBIAS(400,480,800,240,BLACK);
 	
-	
-	
-	
-		
-		
-		
-		
-		
-		
-		
-		
-	
-	
-	
-	
-	
-	
-	
- 
 
-	BSP_Led_Init();				//LED灯GPIO初始化
 	/* 只要工程用到中断，就需要设置中断分组；不使用默认分组方案  */
 	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); //设置NVIC中断分组2:2位抢占优先级，2位响应优先级
 	BSP_UART_Init(115200);
@@ -93,49 +123,27 @@ int main(void)
  	exfuns_init();							//为fatfs相关变量申请内存				 
  	f_mount(fs[0],"0:",1); 					//挂载SD卡 
 	
-	while(exf_getfree("0",&total,&free))	//得到SD卡的总容量和剩余容量
-	{
-		printf("SD Card Fatfs Error! \n");
-		DelayCount(0xFFFFF);
-		BSP_Led_Toggle(Led1);//LED快速闪烁
-	}													  			    
-	printf("FATFS OK! \n");	 
-	printf("SD Total Size:%d     MB \n",total>>10);	 
-	printf("SD  Free Size:%d     MB \n",free>>10); 	    
-
-	while (1)
-	{
-//		BSP_Led_On(Led1);
-//		DelayCount(0x4FFFFF);
-//		BSP_Led_Off(Led1);
-//		DelayCount(0x4FFFFF);
-		
-		BSP_Led_Toggle(Led1);
-		DelayCount(0x4FFFFF);
-		
-//		printf("Hello World！\r\n");
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
+	while(1){
+		for(i = 1;i<=2;i++){
+			char  a[100];
+			myitoa(a,i);
+			//printf("%s\n",a);
+			myLoadPicFromSDcard(fsrc,strcat(a,".bin"));
+			DelayMs(2000);
+		}
 	}
+		
+	//myLoadPicFromSDcard(fsrc,"1.bin");
+	
+//	while(exf_getfree("0",&total,&free))	//得到SD卡的总容量和剩余容量
+//	{
+//		printf("SD Card Fatfs Error! \n");
+//		DelayCount(0xFFFFF);
+//		BSP_Led_Toggle(Led1);//LED快速闪烁
+//	}													  			    
+//	printf("FATFS OK! \n");	 
+//	printf("SD Total Size:%d     MB \n",total>>10);	 
+//	printf("SD  Free Size:%d     MB \n",free>>10); 	    
+		
 }
 

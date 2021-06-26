@@ -251,11 +251,9 @@ void LcdPrint16bitBmp(u16* image,u16 x,u16 y,u16 widht,u16 height)
 	
 	for(h=0;h<height;h++)
 	{
-		XY_Coordinate(x,y+h);
-		WriteCommand(0x02);		//MRWC  REG[02h] -- Memory Read/Write Command
 		for(w = 0; w< widht; w++)
 		{
-			WriteData(*image++);
+			RA8875_PutPixelGUI(w, h, 0);
 		}
 	}
 }
