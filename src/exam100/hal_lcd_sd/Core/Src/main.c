@@ -294,7 +294,13 @@ int main(void)
 	dirFileNum = getDirFileNum(PIC_DIRECTORY_COPY);
 	//myLoadPicFromSDcard(fsrc,"/pic/0.bin");
 	printf("dirFileNum = %d\n",dirFileNum);
-	while(1){
+  /* USER CODE END 2 */
+
+  /* Infinite loop */
+  /* USER CODE BEGIN WHILE */
+  while (1)
+  {
+    /* USER CODE END WHILE */
 		u8 key = Key_Scan(0);  // 检测按键 
 		switch(key){
 			case 1:    // 如果是key0被按下 那么就切换为下一张图片
@@ -317,16 +323,6 @@ int main(void)
 				myLoadPicFromSDcard(myConcatPath(a));
 				break;
 		}
-	}
-
-  /* USER CODE END 2 */
-
-  /* Infinite loop */
-  /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-    /* USER CODE END WHILE */
-
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
@@ -360,7 +356,7 @@ void SystemClock_Config(void)
   RCC_ClkInitStruct.ClockType = RCC_CLOCKTYPE_HCLK|RCC_CLOCKTYPE_SYSCLK
                               |RCC_CLOCKTYPE_PCLK1|RCC_CLOCKTYPE_PCLK2;
   RCC_ClkInitStruct.SYSCLKSource = RCC_SYSCLKSOURCE_PLLCLK;
-  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV2;
+  RCC_ClkInitStruct.AHBCLKDivider = RCC_SYSCLK_DIV1;
   RCC_ClkInitStruct.APB1CLKDivider = RCC_HCLK_DIV2;
   RCC_ClkInitStruct.APB2CLKDivider = RCC_HCLK_DIV1;
 

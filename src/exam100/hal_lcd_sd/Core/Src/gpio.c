@@ -19,9 +19,9 @@
 
 /* Includes ------------------------------------------------------------------*/
 #include "gpio.h"
-#include "BSP_Led_Key.h"
-/* USER CODE BEGIN 0 */
 
+/* USER CODE BEGIN 0 */
+#include "BSP_Led_Key.h"
 /* USER CODE END 0 */
 
 /*----------------------------------------------------------------------------*/
@@ -41,8 +41,8 @@
 void MX_GPIO_Init(void)
 {
 
+	
 	BSP_Led_Key_Init();
-
 }
 
 /* USER CODE BEGIN 2 */
