@@ -290,7 +290,7 @@ int main(void)
 	}
 
 	i = 0;
-	myLoadPicFromSDcard(myConcatPath("0.bin"));
+	//myLoadPicFromSDcard(myConcatPath("0.bin"));
 	dirFileNum = getDirFileNum(PIC_DIRECTORY_COPY);
 	//myLoadPicFromSDcard(fsrc,"/pic/0.bin");
 	printf("dirFileNum = %d\n",dirFileNum);
@@ -301,28 +301,35 @@ int main(void)
   while (1)
   {
     /* USER CODE END WHILE */
-		u8 key = Key_Scan(0);  // 检测按键 
-		switch(key){
-			case 1:    // 如果是key0被按下 那么就切换为下一张图片
-				HAL_GPIO_TogglePin(LED0_GPIO_Port,LED0_Pin);
-				i = (i+1)%dirFileNum; 
-				printf("%d\n",i);
-				myitoa(i,a,10);
-				strcat(a,".bin");
-				myLoadPicFromSDcard(myConcatPath(a));
-				break;
-			case 2:  // 如果是key1被按下 那么就切换为上一张图片
-				HAL_GPIO_TogglePin(LED0_GPIO_Port,LED0_Pin);
-				if(i<=0)
-					i = dirFileNum-1;
-				else
-					i = (i-1)%dirFileNum; 
-				printf("%d\n",i);
-				myitoa(i,a,10);
-				strcat(a,".bin");
-				myLoadPicFromSDcard(myConcatPath(a));
-				break;
-		}
+		i = (i+1)%dirFileNum; 
+		myitoa(i,a,10);
+		strcat(a,".bin");
+		myLoadPicFromSDcard(myConcatPath(a));
+		//HAL_Delay(3000);
+		DelayMs(2000);
+		
+//		u8 key = Key_Scan(0);  // 检测按键 
+//		switch(key){
+//			case 1:    // 如果是key0被按下 那么就切换为下一张图片
+//				HAL_GPIO_TogglePin(LED0_GPIO_Port,LED0_Pin);
+//				i = (i+1)%dirFileNum; 
+//				printf("%d\n",i);
+//				myitoa(i,a,10);
+//				strcat(a,".bin");
+//				myLoadPicFromSDcard(myConcatPath(a));
+//				break;
+//			case 2:  // 如果是key1被按下 那么就切换为上一张图片
+//				HAL_GPIO_TogglePin(LED0_GPIO_Port,LED0_Pin);
+//				if(i<=0)
+//					i = dirFileNum-1;
+//				else
+//					i = (i-1)%dirFileNum; 
+//				printf("%d\n",i);
+//				myitoa(i,a,10);
+//				strcat(a,".bin");
+//				myLoadPicFromSDcard(myConcatPath(a));
+//				break;
+//		}
     /* USER CODE BEGIN 3 */
   }
   /* USER CODE END 3 */
